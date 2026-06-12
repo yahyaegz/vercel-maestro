@@ -14,11 +14,23 @@ const MusicGenerator = ({ onGenerateComplete, onGenerating }) => {
     // Initialize the Magenta MusicRNN model
     const initializeModel = async () => {
       try {
+        // Wait for the CDN script to inject window.mm (up to 5 seconds)
+        let attempts = 0;
+        while (!window.mm && attempts < 50) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          attempts++;
+        }
+        
+        if (!window.mm) {
+          throw new Error("Timeout: Magenta.js failed to load from CDN.");
+        }
+
         const rnn = new window.mm.MusicRNN('https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn');
         await rnn.initialize();
         setModel(rnn);
         setIsModelLoading(false);
       } catch (err) {
+        console.error("Model Load Error:", err);
         setError('Failed to load AI weights.');
         setIsModelLoading(false);
       }
