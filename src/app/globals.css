@@ -1,0 +1,520 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg-dark: #0a0a0f;
+  --sidebar-bg: #111116;
+  --text-main: #f8f8fb;
+  --text-muted: #8b8b9b;
+  --primary: #a78bfa;
+  --secondary: #f472b6;
+  --border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(20, 20, 25, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #000;
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* -----------------------------
+   STUDIO LAYOUT
+----------------------------- */
+.studio-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* -----------------------------
+   LEFT SIDEBAR
+----------------------------- */
+.sidebar {
+  width: 380px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+  z-index: 10;
+}
+
+.brand-header {
+  padding: 2.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(to bottom, rgba(167, 139, 250, 0.05), transparent);
+}
+
+.logo-container {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.logo-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brand-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(to right, #fff, #e2e8f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-header p {
+  font-size: 0.85rem;
+  color: var(--secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+.sidebar-content {
+  flex: 1;
+  padding: 2.5rem 2rem;
+  overflow-y: auto;
+}
+
+.control-section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar-footer {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+/* -----------------------------
+   CONTROL PANEL COMPONENTS
+----------------------------- */
+.control-panel-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+}
+
+.control-group {
+  margin-bottom: 2.5rem;
+}
+
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.control-group label {
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.value-badge {
+  background: rgba(167, 139, 250, 0.15);
+  color: var(--primary);
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+
+.range-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  outline: none;
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  border: 4px solid var(--primary);
+  box-shadow: 0 0 10px var(--primary);
+  transition: transform 0.2s;
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 1.2rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  transition: all 0.3s;
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(236, 72, 153, 0.4);
+}
+
+.btn-primary:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.error-message {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* -----------------------------
+   RIGHT MAIN STAGE (Visualizer)
+----------------------------- */
+.main-stage {
+  flex: 1;
+  background: radial-gradient(circle at center, #1a1a24 0%, #000 100%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.idle-stage, .loading-stage {
+  text-align: center;
+  max-width: 400px;
+  animation: fadeIn 1s ease-out;
+}
+
+.idle-icon {
+  color: var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.idle-stage h2, .loading-stage h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.idle-stage p, .loading-stage p {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* -----------------------------
+   PIANOTIFY PLAYER
+----------------------------- */
+.player-stage-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 1s ease-out;
+}
+
+.waterfall-container {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The Massive Waterfall */
+.massive-visualizer {
+  flex: 1;
+  width: 100%;
+  background: transparent;
+  /* Push visualizer slightly up so notes fall cleanly onto keys */
+  margin-bottom: -10px;
+}
+
+/* Customize html-midi-player internals */
+midi-visualizer::part(piano-roll) {
+  background: transparent;
+}
+midi-visualizer::part(piano-keys) {
+  /* Make the piano keys stand out */
+  border-top: 2px solid var(--primary);
+  box-shadow: 0 -10px 30px rgba(139, 92, 246, 0.2);
+}
+
+/* Custom Piano Keyboard */
+.piano-keyboard-container {
+  height: 120px;
+  width: 100%;
+  position: relative;
+  z-index: 5;
+  background: #000;
+  box-shadow: 0 -20px 40px rgba(167, 139, 250, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.piano-keyboard {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  border-top: 4px solid var(--primary);
+}
+
+.key {
+  position: relative;
+  box-sizing: border-box;
+}
+
+.white-key {
+  flex: 1;
+  background: linear-gradient(to bottom, #fff 0%, #e0e0e0 100%);
+  border-right: 1px solid #ccc;
+  border-bottom: 4px solid #bbb;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+  transition: background 0.1s;
+}
+
+.white-key.active-white {
+  background: linear-gradient(to bottom, #86efac 0%, #22c55e 100%);
+  border-bottom-width: 2px;
+  transform: translateY(2px);
+}
+
+.key-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #555;
+  pointer-events: none;
+}
+
+.white-key.active-white .key-label {
+  color: #064e3b;
+}
+
+.white-key:last-child {
+  border-right: none;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.05s ease;
+}
+
+.black-key {
+  position: absolute;
+  top: 0;
+  height: 65px;
+  background: #111116;
+  border-radius: 0 0 4px 4px;
+  z-index: 10;
+  box-shadow: inset 0 -4px 4px rgba(255,255,255,0.1), 0 2px 4px rgba(0,0,0,0.5);
+  transition: all 0.05s ease;
+}
+
+.active-white {
+  background: #ffffff !important;
+  transform: translateY(2px);
+}
+
+.active-black {
+  background: #ffffff !important;
+  transform: translateY(2px);
+}
+
+.piano-base {
+  height: 10px;
+  background: #111;
+  border-top: 2px solid #222;
+}
+
+/* Floating Controls */
+.floating-controls {
+  height: 80px;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  gap: 2rem;
+  z-index: 20;
+}
+
+.sleek-player {
+  flex: 1;
+}
+
+midi-player::part(control-panel) {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.btn-download {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  text-decoration: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  border: 1px solid var(--border);
+}
+
+.btn-download:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Sound Waves */
+.sound-waves.large {
+  display: flex;
+  height: 48px;
+  justify-content: center;
+  margin-bottom: 2rem;
+  gap: 8px;
+}
+
+.sound-waves.large .wave-bar {
+  width: 8px;
+  background: linear-gradient(to top, var(--primary), var(--secondary));
+  border-radius: 8px;
+  box-shadow: 0 0 15px var(--secondary);
+  animation: wave 1s ease-in-out infinite;
+}
+
+.sound-waves.large .wave-bar:nth-child(1) { height: 40%; animation-delay: 0.0s; }
+.sound-waves.large .wave-bar:nth-child(2) { height: 80%; animation-delay: 0.1s; }
+.sound-waves.large .wave-bar:nth-child(3) { height: 100%; animation-delay: 0.2s; }
+.sound-waves.large .wave-bar:nth-child(4) { height: 60%; animation-delay: 0.3s; }
+.sound-waves.large .wave-bar:nth-child(5) { height: 30%; animation-delay: 0.4s; }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+/* -----------------------------
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+----------------------------- */
+@media (max-width: 900px) {
+  .studio-layout {
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  
+  .sidebar-content {
+    padding: 1.5rem;
+  }
+  
+  .main-stage {
+    min-height: 60vh;
+  }
+  
+  .floating-controls {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .btn-download {
+    width: 100%;
+    justify-content: center;
+  }
+}
