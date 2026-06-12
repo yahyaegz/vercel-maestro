@@ -1,109 +1,73 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Play, Loader2 } from 'lucide-react';
+import { onnxGenerator } from '../lib/onnxGenerator';
 
 const MusicGenerator = ({ onGenerateComplete, onGenerating }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [numNotes, setNumNotes] = useState(250);
   const [temperature, setTemperature] = useState(0.8);
   const [error, setError] = useState(null);
-  const [model, setModel] = useState(null);
-  const [isModelLoading, setIsModelLoading] = useState(true);
-
-  useEffect(() => {
-    // Initialize the Magenta MusicRNN model
-    const initializeModel = async () => {
-      try {
-        // Wait for the CDN script to inject window.mm (up to 5 seconds)
-        let attempts = 0;
-        while (!window.mm && attempts < 50) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          attempts++;
-        }
-        
-        if (!window.mm) {
-          throw new Error("Timeout: Magenta.js failed to load from CDN.");
-        }
-
-        const rnn = new window.mm.MusicRNN('https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn');
-        await rnn.initialize();
-        setModel(rnn);
-        setIsModelLoading(false);
-      } catch (err) {
-        console.error("Model Load Error:", err);
-        setError('Failed to load AI weights.');
-        setIsModelLoading(false);
-      }
-    };
-    initializeModel();
-  }, []);
+  const [progress, setProgress] = useState(0);
 
   const handleGenerate = async () => {
-    if (!model) return;
-    
     setIsGenerating(true);
     onGenerating(true);
     setError(null);
-    onGenerateComplete(null);
+    setProgress(0);
 
     try {
-      // Create a starting seed (Middle C)
-      const seedSequence = {
-        notes: [
-          { pitch: 60, startTime: 0.0, endTime: 0.5, velocity: 80 }
-        ],
-        totalTime: 0.5
-      };
+      // 1. Run the local ONNX PyTorch model
+      const midiUrl = await onnxGenerator.generate(
+        numNotes * 4, // 4 tokens per note (Wait, Pitch, Dur, Vel)
+        temperature,
+        (p) => setProgress(Math.round(p * 100))
+      );
 
-      // Quantize sequence to 4 steps per quarter note
-      const qns = window.mm.sequences.quantizeNoteSequence(seedSequence, 4);
-      
-      // Generate continuation
-      const result = await model.continueSequence(qns, numNotes, temperature);
-      
-      // Unquantize and combine
-      const unquantized = window.mm.sequences.unquantizeSequence(result);
-      const combined = window.mm.sequences.concatenate([seedSequence, unquantized]);
-
-      // Convert to MIDI Blob
-      const midiBytes = window.mm.sequenceProtoToMidi(combined);
-      const blob = new Blob([midiBytes], { type: 'audio/midi' });
-      const url = URL.createObjectURL(blob);
-      
+      // 2. Return URL to parent
       onGenerateComplete({
-        url: url,
-        filename: `AI_Compo_${Date.now()}.mid`
+        url: midiUrl,
+        filename: `chopin_transformer_${Math.floor(Math.random()*10000)}.mid`
       });
+
     } catch (err) {
+      console.error(err);
       setError(err.message || 'Generation failed.');
     } finally {
       setIsGenerating(false);
       onGenerating(false);
+      setProgress(0);
     }
   };
 
   return (
-    <div className="control-panel-card">
-      <div className="control-group">
-        <div className="control-header">
-          <label htmlFor="notes-length">Sequence Length</label>
-          <span className="value-badge">{numNotes} Notes</span>
+    <div className="control-panel-card relative overflow-hidden bg-gray-900/40 border border-purple-500/20 p-6 rounded-2xl backdrop-blur-xl">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 pointer-events-none" />
+      
+      <div className="control-group mb-6 relative z-10">
+        <div className="flex justify-between items-center mb-3">
+          <label htmlFor="notes-length" className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Sequence Length</label>
+          <span className="text-xs font-mono bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full border border-purple-500/30">
+            {numNotes} Notes
+          </span>
         </div>
         <input 
           id="notes-length"
           type="range" 
           min="50" 
-          max="1000" 
+          max="500" 
           value={numNotes} 
           onChange={(e) => setNumNotes(parseInt(e.target.value))}
-          className="range-slider"
+          className="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
         />
       </div>
 
-      <div className="control-group">
-        <div className="control-header">
-          <label htmlFor="temperature">Creativity</label>
-          <span className="value-badge">{temperature.toFixed(2)}</span>
+      <div className="control-group mb-8 relative z-10">
+        <div className="flex justify-between items-center mb-3">
+          <label htmlFor="temperature" className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Creativity</label>
+          <span className="text-xs font-mono bg-pink-500/20 text-pink-300 px-3 py-1 rounded-full border border-pink-500/30">
+            {temperature.toFixed(2)}
+          </span>
         </div>
         <input 
           id="temperature"
@@ -113,35 +77,35 @@ const MusicGenerator = ({ onGenerateComplete, onGenerating }) => {
           step="0.05"
           value={temperature} 
           onChange={(e) => setTemperature(parseFloat(e.target.value))}
-          className="range-slider"
+          className="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-pink-500"
         />
       </div>
 
       <button 
-        className="btn-primary"
+        className="w-full py-4 px-6 rounded-xl font-bold text-white shadow-lg shadow-purple-500/20 
+                   bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500
+                   transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]
+                   disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative z-10"
         onClick={handleGenerate}
-        disabled={isGenerating || isModelLoading}
+        disabled={isGenerating}
       >
-        {isModelLoading ? (
-          <>
-            <Loader2 className="spinner" size={20} />
-            Loading AI Engine...
-          </>
-        ) : isGenerating ? (
-          <>
-            <Loader2 className="spinner" size={20} />
-            Computing...
-          </>
-        ) : (
-          <>
-            <Play size={20} className="play-icon" />
-            Generate Composition
-          </>
-        )}
+        <div className="flex items-center justify-center gap-3">
+          {isGenerating ? (
+            <>
+              <Loader2 className="animate-spin" size={20} />
+              <span>Computing... {progress}%</span>
+            </>
+          ) : (
+            <>
+              <Play size={20} className="fill-current" />
+              <span>Generate Composition</span>
+            </>
+          )}
+        </div>
       </button>
 
       {error && (
-        <div className="error-message">
+        <div className="mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-mono relative z-10">
           {error}
         </div>
       )}
