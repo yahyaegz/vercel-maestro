@@ -24,8 +24,8 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="antialiased">
-        <Script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.js" strategy="beforeInteractive" />
-        <Script src="https://cdn.jsdelivr.net/npm/html-midi-player@1.5.0/dist/midi-player.min.js" strategy="beforeInteractive" />
+        <Script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.min.js" strategy="beforeInteractive" />
+        <Script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0" strategy="beforeInteractive" />
         {children}
       </body>
     </html>
