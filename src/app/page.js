@@ -27,49 +27,56 @@ export default function Home() {
           </div>
           <div>
             <h1>AI Maestro</h1>
-            <p className="subtitle">Neural Symphony Engine</p>
+            <p>Neural Symphony Engine</p>
           </div>
         </header>
-
-        <section className="control-section">
-          <div className="section-title">
-            <Sparkles size={18} className="text-pink-500" />
-            <h2>AI Composer</h2>
+        
+        <div className="sidebar-content">
+          <div className="control-section-title">
+            <Music size={18} /> Generation Controls
           </div>
           <MusicGenerator 
-            onGenerateComplete={handleGenerateComplete}
-            onGenerating={setIsGenerating}
+            onGenerateComplete={handleGenerateComplete} 
+            onGenerating={(status) => setIsGenerating(status)} 
           />
-        </section>
-
-        <section className="history-section mt-8">
-          <div className="section-title">
-            <Music size={18} className="text-blue-400" />
-            <h2>Song Library</h2>
-          </div>
+          
           <SongHistory 
-            history={history}
-            onSelectSong={(song) => setMidiData(song)}
-            currentSongUrl={midiData?.url}
+            history={history} 
+            currentUrl={midiData?.url} 
+            onSelect={(song) => setMidiData(song)} 
           />
-        </section>
+        </div>
+
+        <footer className="sidebar-footer">
+          &copy; 2026 AI Studio by Yahya el gzouli
+        </footer>
       </aside>
 
       {/* RIGHT MAIN STAGE - Visualizer */}
       <main className="main-stage">
-        {isGenerating ? (
-          <div className="empty-state">
-            <div className="pulse-ring"></div>
-            <h3>Composing Masterpiece...</h3>
-            <p>The neural network is synthesizing notes in real-time.</p>
-          </div>
-        ) : midiData ? (
+        {midiData ? (
           <PianotifyPlayer midiUrl={midiData.url} filename={midiData.filename} />
         ) : (
-          <div className="empty-state">
-            <div className="idle-icon">🎹</div>
-            <h3>Ready to Compose</h3>
-            <p>Adjust the sequence length and creativity, then press Generate.</p>
+          <div className="empty-stage">
+            {isGenerating ? (
+              <div className="loading-stage">
+                <div className="sound-waves large">
+                  <div className="wave-bar"></div>
+                  <div className="wave-bar"></div>
+                  <div className="wave-bar"></div>
+                  <div className="wave-bar"></div>
+                  <div className="wave-bar"></div>
+                </div>
+                <h2>Composing Masterpiece...</h2>
+                <p>The AI is calculating thousands of neural connections to write your song.</p>
+              </div>
+            ) : (
+              <div className="idle-stage">
+                <Music size={64} className="idle-icon" />
+                <h2>Studio Ready</h2>
+                <p>Adjust the sequence length and click Generate to start the AI composer.</p>
+              </div>
+            )}
           </div>
         )}
       </main>

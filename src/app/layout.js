@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="antialiased">
         <Script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.js" strategy="beforeInteractive" />
         <Script src="https://cdn.jsdelivr.net/npm/html-midi-player@1.5.0/dist/midi-player.min.js" strategy="beforeInteractive" />
         {children}
