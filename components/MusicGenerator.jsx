@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Play, Loader2 } from 'lucide-react';
-import * as mm from '@magenta/music';
 
 const MusicGenerator = ({ onGenerateComplete, onGenerating }) => {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -15,7 +14,7 @@ const MusicGenerator = ({ onGenerateComplete, onGenerating }) => {
     // Initialize the Magenta MusicRNN model
     const initializeModel = async () => {
       try {
-        const rnn = new mm.MusicRNN('https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn');
+        const rnn = new window.mm.MusicRNN('https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn');
         await rnn.initialize();
         setModel(rnn);
         setIsModelLoading(false);
@@ -45,17 +44,17 @@ const MusicGenerator = ({ onGenerateComplete, onGenerating }) => {
       };
 
       // Quantize sequence to 4 steps per quarter note
-      const qns = mm.sequences.quantizeNoteSequence(seedSequence, 4);
+      const qns = window.mm.sequences.quantizeNoteSequence(seedSequence, 4);
       
       // Generate continuation
       const result = await model.continueSequence(qns, numNotes, temperature);
       
       // Unquantize and combine
-      const unquantized = mm.sequences.unquantizeSequence(result);
-      const combined = mm.sequences.concatenate([seedSequence, unquantized]);
+      const unquantized = window.mm.sequences.unquantizeSequence(result);
+      const combined = window.mm.sequences.concatenate([seedSequence, unquantized]);
 
       // Convert to MIDI Blob
-      const midiBytes = mm.sequenceProtoToMidi(combined);
+      const midiBytes = window.mm.sequenceProtoToMidi(combined);
       const blob = new Blob([midiBytes], { type: 'audio/midi' });
       const url = URL.createObjectURL(blob);
       

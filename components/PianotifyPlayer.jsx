@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Download } from 'lucide-react';
 import { Midi } from '@tonejs/midi';
-import 'html-midi-player';
+// We are loading html-midi-player via CDN in layout.js to avoid Next.js bundling errors.
 import PianoKeyboard from './PianoKeyboard';
 
 const getNotePosition = (midi) => {

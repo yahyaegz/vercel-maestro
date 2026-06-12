@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@magenta/music": "^1.23.1",
+    "@tonejs/midi": "^2.0.28",
     "lucide-react": "^1.18.0",
     "next": "16.2.9",
     "react": "19.2.4",
